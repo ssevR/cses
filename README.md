@@ -1,6 +1,6 @@
 # CSES All solved problems
 
-All 300 accepted solutions to [CSES Problem Set](https://cses.fi/problemset/). I had used [Atcoder Library](https://github.com/atcoder/ac-library). [Link](https://cses.fi/user/26042) to my cses profile.
+All 300 accepted solutions to [CSES Problem Set](https://cses.fi/problemset/). I had used [Atcoder Library](https://github.com/atcoder/ac-library). [Here](https://cses.fi/user/26042) is a link to my cses profile.
 
 # Problems
 

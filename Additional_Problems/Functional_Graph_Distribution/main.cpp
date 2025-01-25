@@ -578,6 +578,8 @@ void calc_C() {
  
  
 int main() {
+    IOS;
+
     calc_C();
     stirling[0][0] = 1;
     for (int i = 1; i < M; ++i) {
@@ -600,6 +602,4 @@ int main() {
         cout << res.val() << ' ';
     }
     cout << '\n';
-
-    IOS;
 }
