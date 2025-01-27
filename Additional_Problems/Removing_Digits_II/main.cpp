@@ -63,11 +63,7 @@ int main() {
     }
     ll n;
     cin >> n;
-    if (n == 1e18) {
-        cout << dp[17][0][0].fi << '\n';
-        return 0;
-    }
-    else if (n < 10) {
+    if (n < 10) {
         cout << 1 << '\n';
         return 0;
     }
