@@ -29,13 +29,18 @@ string s;
  
 void precompute(int n) {
     int sz = 0;
-    for (int k = 0; k <= (n < 8); ++k) // if n < 8 parity of pos .. does matter
-        for (int i = 0; i <= n - 2; ++i) {
-            string cur = string(i, 'A') + string(n - 2 - i, 'B');
-            cur.insert(k, "..");
+    for (int i = 0; i <= n - 2; ++i) {
+        string cur = string(i, 'A') + string(n - 2 - i, 'B');
+        cur.insert(0, "..");
+        dp[sz++] = cur;
+        pr[cur] = "";
+        if (n < 8) { //if n < 8 parity of dots position does matter
+            cur = string(i, 'A') + string(n - 2 - i, 'B');
+            cur.insert(1, "..");
             dp[sz++] = cur;
             pr[cur] = "";
         }
+    }
  
     int i = 0;
     while(i < sz) {
@@ -55,7 +60,8 @@ void precompute(int n) {
     }
     // for n = 8 sz is 448
 }
- 
+
+//sort(l, r)
 void solve(int l, int r) {
     string cur = s.substr(l, r - l);
     while(pr[cur] != "") {
@@ -63,6 +69,12 @@ void solve(int l, int r) {
         res.push_back(s.substr(0, l) + cur + s.substr(r));
     }
     s = s.substr(0, l) + cur + s.substr(r);
+}
+
+void op(int i, int j) { // i + 1 < j && j < 2 * n - 1
+    swap(s[i], s[j]);
+    swap(s[i + 1], s[j + 1]);
+    res.push_back(s);
 }
  
 int main() {
@@ -83,51 +95,47 @@ int main() {
         solve(0, n * 2);
     }
     else {
-        int k = s.find('.');
-        if (k > 1) {
-            swap(s[k], s[0]);
-            swap(s[k + 1], s[1]);
-            res.push_back(s);
+        int dots_pos = s.find('.');
+        // put dots at the beginning of string
+        if (dots_pos > 1) {
+            op(dots_pos, 0);
         }
+        else if (dots_pos == 1) {
+            op(dots_pos, 3);
+            op(3, 0);
+        }
+        dots_pos = 0;
  
         precompute(8);
-        int l = 0, r = 2 * n;
-        while(r - l > 8) {
-            if (s[l + 2] == 'A' && s[l + 3] == 'A') {
-                swap(s[l], s[l + 2]);
-                swap(s[l + 1], s[l + 3]);
-                res.push_back(s);
-                l += 2;
-            }
-            else if (s[r - 1] == 'B' && s[r - 2] == 'B') {
-                r -= 2;
+
+        while(dots_pos + 8 < 2 * n) {
+            if (s[dots_pos + 2] == 'A' && s[dots_pos + 3] == 'A') {
+                op(dots_pos, dots_pos + 2);
+                dots_pos += 2;
             }
             else {
-                int b_pos = s.find('B', l); // bpos <= l + 1
+                int b_pos = s.find('B', dots_pos); // bpos <= dots_pos + 1
                 int a_pos = s.find('A', b_pos + 2); // apos = 2 * n - 1 is possible
                 int flag = 0;
-                if (a_pos == 2 * n - 1) { 
+                if (a_pos == s.npos) {
+                    solve(dots_pos, dots_pos + 8);
+                    break;
+                }
+                else if (a_pos == 2 * n - 1) { 
                     --a_pos;
                     flag = 1;
                     // s[a_pos, a_pos + 1] == "BA"
                 }
+
+                op(dots_pos, b_pos);
+                op(b_pos, a_pos);
+                op(a_pos, dots_pos);
  
-                swap(s[l], s[b_pos]);
-                swap(s[l + 1], s[b_pos + 1]);
-                res.push_back(s);
  
-                swap(s[b_pos], s[a_pos]);
-                swap(s[b_pos + 1], s[a_pos + 1]);
-                res.push_back(s);
- 
-                swap(s[a_pos], s[l]);
-                swap(s[a_pos + 1], s[l + 1]);
-                res.push_back(s);
- 
-                if (flag) solve(l, l + 8);
+                if (flag) solve(dots_pos, dots_pos + 8);
             }
         }
-        solve(l, l + 8);
+        solve(dots_pos, dots_pos + 8);
     }
  
     cout << res.size() << '\n';

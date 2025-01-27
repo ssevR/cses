@@ -30,5 +30,3 @@ else:
     if dec_part % 2 == 1:
         dec_part += 1
 print(int_part, '.', f'{dec_part:06}', sep='')
-
-
