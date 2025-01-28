@@ -588,7 +588,7 @@ void calc_C() {
     }
 }
  
-int cnt[2][4];
+int cnt[2][3];
  
 int main() {
     IOS;
@@ -613,35 +613,33 @@ int main() {
         }
     }
     for (int i = 0; i < n; ++i) {
-        if (out[i].empty() && in[i].empty())
+        if (out[i].empty() && in[i].empty()) // isolate vertice in the left disjoint
             ++cnt[0][0];
-        if (out[i].size() == 1 && in[i].empty() && out[out[i][0]].empty())
+        if (out[i].size() == 1 && in[i].empty() && out[out[i][0]].empty()) // component with 1 edge from left disjoint
             ++cnt[0][1];
         if (out[i].empty())
             ++cnt[0][2];
     }
     for (int i = n; i < 2 * n; ++i) {
-        if (out[i].empty() && in[i].empty())
+        if (out[i].empty() && in[i].empty()) // isolated vertice in the right disjoint
             ++cnt[1][0];
-        if (out[i].size() == 1 && in[i].empty() && out[out[i][0]].empty())
+        if (out[i].size() == 1 && in[i].empty() && out[out[i][0]].empty()) // component with 1 edge from the right disjoint
             ++cnt[1][1];
         if (out[i].empty())
             ++cnt[1][2];
     }
-    /*for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < 3; ++j)
-            cout << cnt[i][j] << ' ';
-        cout << '\n';
-    }*/
     mint res = 0;
-    for (int fr = 0; fr <= min(cnt[0][0], cnt[1][0]); ++fr)
-        for (int z1 = 0; z1 <= cnt[0][1]; ++z1)
-            for (int z2 = 0; z2 <= cnt[1][1]; ++z2) {
+    for (int fr = 0; fr <= min(cnt[0][0], cnt[1][0]); ++fr) // fr - is the number of cycles of length 2 formed by isolated vertices
+
+        for (int z1 = 0; z1 <= cnt[0][1]; ++z1) // z1 is  the number of cycles of length 2 formed by 1-edge components from left
+            for (int z2 = 0; z2 <= cnt[1][1]; ++z2) { // z2 .. // .. from right
                 mint cur = 1;
                 cur *= _C[cnt[0][0]][fr] * _C[cnt[1][0]][fr] * fact[fr];
                 cur *= _C[cnt[0][1]][z1] * _C[cnt[1][1]][z2];
                 int l = cnt[0][2] - fr - z2;
                 int r = cnt[1][2] - fr - z1;
+                // l and r are remaining vertices
+                // componnets with >= 2 edges can not form cycles of length 2
                 cur *= fact[l] * fact[r];
                 if ((fr + z1 + z2) % 2)
                     cur *= -1;
