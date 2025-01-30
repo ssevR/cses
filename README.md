@@ -190,7 +190,7 @@ All 300 accepted solutions to [CSES Problem Set](https://cses.fi/problemset/). I
 1. [Dice Probability](/Mathematics/Dice_Probability/main.cpp)
 1. [Moving Robots](/Mathematics/Moving_Robots/main.cpp)
 1. [Candy Lottery](/Mathematics/Candy_Lottery/main.cpp)
-1. [Inversion Probability](/Mathematics/Inversion_Probability/main.cpp)
+1. [Inversion Probability](/Mathematics/Inversion_Probability/main.py)
 1. [Stick Game](/Mathematics/Stick_Game/main.cpp)
 1. [Nim Game I](/Mathematics/Nim_Game_I/main.cpp)
 1. [Nim Game II](/Mathematics/Nim_Game_II/main.cpp)

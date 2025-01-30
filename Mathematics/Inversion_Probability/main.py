@@ -29,4 +29,8 @@ else:
     dec_part //= 10 ** P
     if dec_part % 2 == 1:
         dec_part += 1
+if dec_part == 1000000:
+    int_part += 1
+    dec_part = 0
+
 print(int_part, '.', f'{dec_part:06}', sep='')
