@@ -23,102 +23,56 @@ const ld PI = 4*atan((ld)1);
 const int dx[4] = {1,0,-1,0}, dy[4] = {0,1,0,-1};
  
 //returns empty vector if path doesnt exist
-//directed graph
-//no multi edges!!
-vector<int> find_euler_path(vector<vector<int> > & g) {
-    int n = (int)g.size();
- 
-    vector<unordered_set<int> > gs(n);
-    for (int i = 0; i < n; ++i) {
-        for (auto u : g[i]) {
-            gs[i].insert(u);
-        }
-    }
- 
-    int st = -1;
-    int cnt_odd = 0;
-    int cnt_edges = 0;
-    if (g[0].empty())
-        return vector<int>();
- 
-    for (int i = 0; i < n; ++i) {
-        if (g[i].size() % 2) {
-            //++cnt_odd;
-            //st = i;
-            return vector<int>();
-        }
-        cnt_edges += g[i].size();
-    }
-    cnt_edges /= 2;
- 
-    unordered_set<ll> used;
- 
-    if (cnt_odd > 2) {
-        return vector<int>();
-    }
-    else if (st == -1) {
-        for (int i = 0; i < n; ++i) {
-            if (g[i].size()) {
-                st = i;
-                break;
+//undirected graph
+vector<int> find_euler_path(vector<vector<pii> > g, int n, int m, int s) {
+    vector<int> path;
+    vector<int> used(m);
+    stack<int> st;
+    st.push(s);
+    while(!st.empty()) {
+        int v = st.top();
+        if (!g[v].empty()) {
+            auto [u, idx] = g[v].back();
+            g[v].pop_back();
+            if (!used[idx]) {
+                used[idx] = 1;
+                st.push(u);
             }
         }
-        if (st == -1) {
-            return vector<int>();
-        }
- 
- 
-    }
- 
-    stack<int> s;
-    s.push(0);
-    vector<int> res;
-    while(!s.empty()) {
-        int v = s.top();
-        bool found_edge = false;
-        for (auto u : gs[v]) {
- 
-            s.push(u);
-            found_edge = true;
-            gs[v].erase(u);
-            gs[u].erase(v);
-            break;
-        }
-        if (!found_edge) {
-            s.pop();
-            res.push_back(v);
+        else {
+            path.push_back(v);
+            st.pop();
         }
     }
- 
-    if (res.size() == cnt_edges + 1) {
-        return res;
-    }
-    else {
-        return vector<int>();
-    }
- 
+    if (path.size() != m + 1) 
+        path.clear();
+    return path;
 }
  
 int main() {
     IOS;
     int n, m;
     cin >> n >> m;
-    vector<vector<int > > g(n);
+    vector<vector<pii > > g(n);
     for (int i = 0; i < m; ++i) {
         int v, u;
         cin >> v >> u;
         --v, --u;
-        g[v].push_back(u);
-        g[u].push_back(v);
+        g[v].push_back({u, i});
+        g[u].push_back({v, i});
     }
-    auto path = find_euler_path(g);
-    if (path.empty()) {
+    for (int i = 0; i < n; ++i) {
+        if (g[i].size() % 2) {
+            cout << "IMPOSSIBLE\n";
+            return 0;
+        }
+    }
+    auto res = find_euler_path(g, n, m, 0);
+    if (res.empty()) {
         cout << "IMPOSSIBLE\n";
     }
-    else {
-        for (auto v : path) {
-            cout << v + 1 << ' ';
-        }
-        cout << '\n';
-    }
+    for (auto x : res)
+        cout << x + 1 << ' ';
+    cout << '\n';
 }
+
